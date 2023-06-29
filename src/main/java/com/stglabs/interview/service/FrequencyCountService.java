@@ -37,7 +37,7 @@ public class FrequencyCountService {
     @CircuitBreaker(name =  "externalPostEndpoint", fallbackMethod = "defaultFallBack")
     @Retry(name= "frequencyEndpointRetry")
     public List<CharacterFrequencyResponse> countCharactersByFrequency(){
-      log.info("invoking endpoint {}", frequencyCountEndpoint);
+      log.info("process=countfrequency invoking endpoint {}", frequencyCountEndpoint);
         var responseEntity = restTemplate.exchange(frequencyCountEndpoint, HttpMethod.GET,null, new ParameterizedTypeReference<List<CharacterFrequencyEndpointResponse>>() {
         });
         var responseBody = responseEntity.getBody();
@@ -48,12 +48,11 @@ public class FrequencyCountService {
     }
 
     public void defaultFallBack(final HttpClientErrorException e){
-       log.error("bad request can be sent to dlq or other process for inspection", e.getMessage());
+       log.error("process=countfrequency bad request can be sent to dlq or other process for inspection", e.getMessage());
     }
 
     public List<CharacterFrequencyResponse> defaultFallBack(Exception e){
-        e.printStackTrace();
-        log.error("failed to invoke frequency endpoint due to {} , falling back to default ", e.getMessage());
+        log.error("process=countfrequency failed to invoke frequency endpoint due to {} , falling back to default ", e.getMessage());
         return new ArrayList<>();
     }
 
