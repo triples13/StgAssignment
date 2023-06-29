@@ -1,0 +1,17 @@
+endpoint:
+  external:
+    frequencycount:  https://jsonplaceholder.typicode.com/comments?q=Eliseo@gardner.biz
+
+resilience4j:
+  retry:
+    instances:
+      frequencyEndpointRetry:
+        max-attempts: 3
+        wait-duration: 2s
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+        retry-exceptions:
+          - org.springframework.web.client.RestClientException
+        ignore-exceptions:
+          - org.springframework.web.client.HttpClientErrorException
+
